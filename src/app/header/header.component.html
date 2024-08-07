@@ -1,4 +1,16 @@
-<div>
-    <a routerLink="/view-mode" routerLinkActive="true">View Mode</a>
-    <a routerLink="/settings" routerLinkActive="true">Settings</a>
-</div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" routerLink="/" routerLinkActive="true">Charts App</a>
+    <ul class="navbar-nav m-1 px-3">
+        <li class="nav-item">
+            <a class="nav-link" routerLink="/view-mode" routerLinkActive="active">View Mode</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLink="/settings" routerLinkActive="active">Settings</a>
+        </li>
+        <!--<li class="nav-item">
+            <a class="nav-link" routerLink="/pie-chart" routerLinkActive="active">Pie Chart</a>
+        </li>-->
+    </ul>
+    <!--<a class="navbar-brand" routerLink="/view-mode" routerLinkActive="true">View Mode</a>
+    <a class="navbar-brand" routerLink="/settings" routerLinkActive="true">Settings</a> -->
+</nav>
