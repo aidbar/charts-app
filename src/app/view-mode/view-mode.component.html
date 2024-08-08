@@ -1,20 +1,23 @@
 <app-header></app-header>
-<div class="justify-content-center align-items-center">
-    <div *ngIf="charts.length > 0; else noCharts">
-        <mat-form-field appearance="fill">
-        <mat-label>Date Range</mat-label>
-        <mat-date-range-input [formGroup]="dateRangeForm">
-            <input matStartDate formControlName="start" placeholder="Start date">
-            <input matEndDate formControlName="end" placeholder="End date">
-        </mat-date-range-input>
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-date-range-picker #picker></mat-date-range-picker>
-        </mat-form-field>
-        <div *ngFor="let chartAngular of charts">
-        <highcharts-chart [Highcharts]="Highcharts" [options]="chartAngular.options"></highcharts-chart>
-        </div>
-    </div>
+<div class="align-items-start d-flex justify-content-start">
+    <mat-form-field appearance="fill">
+    <mat-label>Date Range</mat-label>
+    <mat-date-range-input [formGroup]="dateRangeForm" [rangePicker]="picker">
+        <input matStartDate formControlName="start" placeholder="Start date">
+        <input matEndDate formControlName="end" placeholder="End date">
+    </mat-date-range-input>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
 </div>
+<div class="align-items-center d-flex justify-content-center">
+        <div *ngIf="charts.length > 0; else noCharts">
+            <div *ngFor="let chartAngular of charts">
+                <highcharts-chart [Highcharts]="Highcharts" [options]="chartAngular.options"></highcharts-chart>
+            </div>
+        </div>
+</div>
+
 
 <ng-template #noCharts>
     <p>No charts to display.</p>
