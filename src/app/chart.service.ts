@@ -29,10 +29,15 @@ export class ChartService {
 
     for (let i = 0; i < 30; i++) {
       const date = new Date(startDate);
+      //generate 5 random values for each day
+      var values = [];
+      for (let j = 0; j < 5; j++) {
+        values.push(Math.floor(Math.random() * 100)); // Random value between 0 and 100
+      }
       date.setDate(startDate.getDate() + i);
       data.push({
         date: date,
-        value: Math.floor(Math.random() * 100) // Random value between 0 and 100
+        value: values //Math.floor(Math.random() * 100) // Random value between 0 and 100
       });
     }
 
