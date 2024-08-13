@@ -13,6 +13,10 @@ import {HeaderComponent} from '../header/header.component';
 import { CommonModule } from '@angular/common';
 import {HighchartsChartModule} from 'highcharts-angular';
 import * as Highcharts from 'highcharts';
+import { Chart } from '../state/chart.model';
+import { Store } from '@ngrx/store';
+import { addChart } from '../state/chart.actions';
+import { selectCharts } from '../state/chart.selectors';
 
 @Component({
   selector: 'app-view-mode',
@@ -39,21 +43,42 @@ export class ViewModeComponent implements OnInit {
   Highcharts: typeof Highcharts = Highcharts;
 
   
-  constructor(private fb: FormBuilder, private chartService: ChartService) {
+  constructor(private fb: FormBuilder, private store: Store<{charts : Chart[]}>, private chartService: ChartService) {
     this.dateRangeForm = this.fb.group({
       start: [null],
       end: [null]
     });
+
+    console.log(this.store);
+    //this.store.addReducer('charts', (state = [], action) => { return state; });
+
+    this.store.select('charts').subscribe(charts => {
+      this.charts = charts;
+      console.log('ViewModeComponent constructor charts: ' + this.charts);
+      console.log(charts);
+      console.log(this.charts);
+    });
+
   }
 
   ngOnInit(): void {
-    console.log('ViewModeComponent initialized');
-    this.chartService.getChartData().subscribe(data => {
-      this.charts = data.map(chart => ({
-        ...chart,
-        options: this.getChartOptions(chart)
-      }));
-    });
+    console.log('ViewModeComponent initialized, charts is: ' + this.charts);
+    console.log(this.charts.length);
+    console.log(typeof this.charts);
+    if (this.charts.length == undefined) { 
+      console.log('ViewModeComponent getChartData called');
+      this.chartService.getChartData().subscribe(data => {
+        console.log('ViewModeComponent getChartData data: ' + data);
+        //mapChartData(this.charts, data);
+        this.charts = data.map(chart => ({
+          ...chart,
+          options: getChartOptions(chart)
+        }));
+        console.log('ViewModeComponent getChartData charts after mapping: ' + this.charts);
+        persistCharts(this.charts, this.store);
+      });
+  }
+
 
     console.log(this.charts);
 
@@ -61,15 +86,7 @@ export class ViewModeComponent implements OnInit {
       this.filterChartsByDateRange(value.start, value.end);
     });
   }
-  getChartOptions(chart: any) : Highcharts.Options {
-    return {
-      title: { text: 'Sample Chart' },
-      series: [{ 
-        type: 'line',
-        data: chart.value
-      }]
-    };
-  }
+
 
   filterChartsByDateRange(start: Date, end: Date): void {
     if (start && end) {
@@ -80,3 +97,24 @@ export class ViewModeComponent implements OnInit {
     }
   }
 }
+
+function getChartOptions(chart: any) : Highcharts.Options {
+    return {
+      title: { text: 'Sample Chart' },
+      series: [{ 
+        type: 'line',
+        data: chart.value
+      }]
+    };
+  }
+function persistCharts(charts: any[], store: Store<{charts: Chart[]}>): void {
+  for (let i = 0; i < charts.length; i++) {
+    store.dispatch(addChart({chart: charts[i]}));
+  }
+}
+
+function mapChartData(charts: any[], data: any[]): void {
+    
+    console.log("ViewModeComponent mapChartData charts: " + charts);
+}
+

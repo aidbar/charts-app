@@ -1,1 +1,37 @@
-<p>settings works!</p>
+<app-header></app-header>
+<div>
+    <button mat-raised-button color="primary" (click)="openModal()">Add Chart</button>
+    <div *ngFor="let chart of charts; let i = index">
+      <span>{{ chart.name }}</span>
+      <button mat-button (click)="openModal(chart, i)">Edit</button>
+      <button mat-button color="warn" (click)="removeChart(i)">Remove</button>
+    </div>
+  </div>
+  
+  <ng-template #chartDialog>
+    <h2 mat-dialog-title>{{ isEditMode ? 'Edit Chart' : 'Add Chart' }}</h2>
+    <mat-dialog-content>
+      <form [formGroup]="chartForm">
+        <mat-form-field appearance="fill">
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Type</mat-label>
+          <mat-select formControlName="type">
+            <mat-option value="line">Line</mat-option>
+            <mat-option value="spline">Spline</mat-option>
+            <mat-option value="area">Area</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Color</mat-label>
+          <input matInput formControlName="color" type="color">
+        </mat-form-field>
+      </form>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <button mat-button (click)="closeModal()">Cancel</button>
+      <button mat-button color="primary" (click)="saveChart()">Save</button>
+    </mat-dialog-actions>
+  </ng-template>
